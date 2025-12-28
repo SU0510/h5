@@ -419,12 +419,16 @@ swiper.on("slideChange", function() {
   if (activeSlide && activeSlide.classList.contains("map")) {
     const markers = activeSlide.querySelectorAll(".location-marker");
     markers.forEach((marker, index) => {
+      // 立即移除active类，准备重新动画
+      marker.classList.remove("active");
+      
+      // 延迟后重新添加active类，从头开始动画显示
       setTimeout(() => {
         marker.classList.add("active");
-      }, index * 1500 + 500); // 每个标记延迟1500ms显示，初始延迟500ms
+      }, index * 1000 + 500); // 每个标记延迟1秒显示，初始延迟500ms
     });
   } else {
-    // 重置地图标记
+    // 离开地图页面时，移除所有标记的active类
     document.querySelectorAll(".location-marker").forEach(marker => {
       marker.classList.remove("active");
     });
