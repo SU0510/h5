@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport"
+      content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+<title>我们的2025</title>
+
+<!-- 字体 -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;700&display=swap" rel="stylesheet">
+
+<!-- Swiper -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<!-- CSS -->
+<link rel="stylesheet" href="css/style.css" />
+
+</head>
+<body>
+
+<!-- 🌌 星空背景（全局） -->
+<canvas id="stars"></canvas>
+<!-- ✨ 点击光晕特效容器 -->
+<div id="clickGlows"></div>
+
+<!-- 🎵 BGM -->
+<audio id="bgm" src="audio/bgm.mp3" loop></audio>
+
+<!-- 📱 Swiper 主体 -->
+<div class="swiper mySwiper">
+  <div class="swiper-wrapper">
+
+    <!-- 🟦 封面页 -->
+    <div class="swiper-slide cover">
+      <!-- 背景图片层 -->
+      <img src="images/cover.jpg" class="cover-img" alt="封面背景" />
+      <!-- 装饰图片组件 - 右侧 -->
+      <img src="images/cover1.jpg" class="cover-decoration cover-decoration-right" alt="封面装饰" />
+      <!-- 装饰图片组件 - 左侧（稍小） -->
+      <img src="images/cover2.jpg" class="cover-decoration cover-decoration-left" alt="封面装饰" />
+      <!-- 遮罩层，让文字更清晰 -->
+      <div class="cover-overlay"></div>
+      <h1 class="title">2025 → 2026<br>我们的故事才刚刚开始</h1>
+      <div class="scroll-tip">上滑开启</div>
+    </div>
+
+    <!-- 回忆页示例 -->
+    <div class="swiper-slide memory">
+      <div class="date-badge">2025.9.28</div>
+      <img src="images/1.jpg" class="photo" alt="我们的回忆" />
+      <div class="text-box">
+        <h2>第一张合照</h2>
+        <p>那天风很软，我们走得很慢，但心跳得很快。</p>
+        <div class="heart-icon">💕</div>
+      </div>
+    </div>
+
+    <div class="swiper-slide memory">
+      <div class="date-badge">2025.10.24</div>
+      <img src="images/2.jpg" class="photo" alt="我们的回忆" />
+      <div class="text-box">
+        <h2>02 / 最甜的一天</h2>
+        <p>你的笑一下子就把整年的疲惫融化掉。</p>
+        <div class="heart-icon">💕</div>
+      </div>
+    </div>
+
+    <div class="swiper-slide memory">
+      <div class="date-badge">2025.11.10</div>
+      <img src="images/3.jpg" class="photo" alt="我们的回忆" />
+      <div class="text-box">
+        <h2>03 / 一起去旅行</h2>
+        <p>与你同行，每一刻都是风景。</p>
+        <div class="heart-icon">💕</div>
+      </div>
+    </div>
+
+    <div class="swiper-slide memory">
+      <div class="date-badge">2025.12.05</div>
+      <img src="images/4.jpg" class="photo" alt="我们的回忆" />
+      <div class="text-box">
+        <h2>04 / 冬日温暖</h2>
+        <p>在你身边，寒冷也变成了浪漫。</p>
+        <div class="heart-icon">💕</div>
+      </div>
+    </div>
+
+    <!-- 📊 统计页面 -->
+    <div class="swiper-slide stats">
+      <div class="stats-container">
+        <h2 class="stats-title">我们的2025</h2>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number" id="daysTogether">0</div>
+            <div class="stat-label">在一起的天数</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">想你的次数</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">每一天</div>
+            <div class="stat-label">美好的回忆</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">1</div>
+            <div class="stat-label">唯一的你</div>
+          </div>
+        </div>
+        <div class="stats-quote">
+          <p>"每一个数字背后，都是我们共同走过的时光"</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- �️ 地图页面 -->
+    <div class="swiper-slide map">
+      <h2 class="map-title">我们一起走过的路</h2>
+      <div class="map-container">
+        <div class="map-background">
+          <!-- 简化的中国地图轮廓 -->
+          <svg viewBox="0 0 800 600" class="map-svg">
+            <!-- 简化的地图轮廓 -->
+            <path d="M 100 200 Q 150 150 200 180 T 300 200 T 400 220 T 500 200 T 600 180 T 700 200 L 680 400 Q 600 450 500 420 T 300 440 T 150 400 Z" 
+                  fill="rgba(255, 255, 255, 0.05)" 
+                  stroke="rgba(255, 255, 255, 0.2)" 
+                  stroke-width="2"/>
+          </svg>
+        </div>
+        <!-- 地点标记 -->
+        <div class="location-marker" data-location="shanghai" style="left: 75%; top: 45%;">
+          <div class="marker-dot"></div>
+          <div class="marker-pulse"></div>
+          <div class="marker-label">
+            <div class="location-name">上海</div>
+            <div class="location-date">2025.10.01</div>
+          </div>
+        </div>
+        <div class="location-marker" data-location="hefei" style="left: 60%; top: 50%;">
+          <div class="marker-dot"></div>
+          <div class="marker-pulse"></div>
+          <div class="marker-label">
+            <div class="location-name">合肥</div>
+            <div class="location-date">2025.10.15</div>
+          </div>
+        </div>
+        <div class="location-marker" data-location="huangshan" style="left: 62%; top: 48%;">
+          <div class="marker-dot"></div>
+          <div class="marker-pulse"></div>
+          <div class="marker-label">
+            <div class="location-name">黄山</div>
+            <div class="location-date">2025.11.05</div>
+          </div>
+        </div>
+        <div class="location-marker" data-location="zhenjiang" style="left: 70%; top: 48%;">
+          <div class="marker-dot"></div>
+          <div class="marker-pulse"></div>
+          <div class="marker-label">
+            <div class="location-name">镇江</div>
+            <div class="location-date">2025.11.20</div>
+          </div>
+        </div>
+        <div class="location-marker" data-location="yangzhou" style="left: 68%; top: 49%;">
+          <div class="marker-dot"></div>
+          <div class="marker-pulse"></div>
+          <div class="marker-label">
+            <div class="location-name">扬州</div>
+            <div class="location-date">2025.12.01</div>
+          </div>
+        </div>
+        <div class="location-marker" data-location="moganshan" style="left: 72%; top: 46%;">
+          <div class="marker-dot"></div>
+          <div class="marker-pulse"></div>
+          <div class="marker-label">
+            <div class="location-name">莫干山</div>
+            <div class="location-date">2025.12.15</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- �📅 时间线页面 -->
+    <div class="swiper-slide timeline swiper-no-swiping">
+      <h2 class="timeline-title">我们的时间线</h2>
+      <div class="timeline-container">
+        <div class="timeline-item">
+          <div class="timeline-date">2025.09.28</div>
+          <div class="timeline-content">
+            <h3>第一次相遇</h3>
+            <p>那天阳光正好，你走进了我的世界</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2025.10.24</div>
+          <div class="timeline-content">
+            <h3>第一次约会</h3>
+            <p>紧张又期待，心跳加速的每一秒</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2025.12.31</div>
+          <div class="timeline-content">
+            <h3>跨年之夜</h3>
+            <p>和你一起迎接新的一年</p>
+          </div>
+        </div>
+        <div class="timeline-item future">
+          <div class="timeline-date">未来...</div>
+          <div class="timeline-content">
+            <h3>更多美好</h3>
+            <p>我们的故事还在继续书写</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 💌 寄语页面 -->
+    <div class="swiper-slide message">
+      <div class="message-container">
+        <h2 class="message-title">想对你说</h2>
+        <div class="message-content">
+          <p class="message-text">
+            遇见你，是我2025年最美好的意外。<br>
+            你的笑容，是我每天最想看到的风景。<br>
+            和你在一起的每一天，都值得珍藏。<br><br>
+            新的一年，希望我们能一起看更多的风景，<br>
+            创造更多属于我们的回忆。<br><br>
+            愿我们的故事，永远未完待续... ❤️
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🎆 最后一页：烟花 + 倒计时 -->
+    <div class="swiper-slide end">
+      <canvas id="fireworks"></canvas>
+      <div class="warm-glow"></div>
+      <h1 class="end-title">未来的每一年<br>都想和你一起度过</h1>
+      <p class="end-text">愿你永远被温柔以待，也愿我一直是你心里的那束光。</p>
+      
+      <!-- 跨年倒计时 -->
+      <div class="countdown-container">
+        <div class="countdown-title">距离2026年还有</div>
+        <div class="countdown-timer">
+          <div class="countdown-item">
+            <div class="countdown-number" id="days">00</div>
+            <div class="countdown-label">天</div>
+          </div>
+          <div class="countdown-separator">:</div>
+          <div class="countdown-item">
+            <div class="countdown-number" id="hours">00</div>
+            <div class="countdown-label">时</div>
+          </div>
+          <div class="countdown-separator">:</div>
+          <div class="countdown-item">
+            <div class="countdown-number" id="minutes">00</div>
+            <div class="countdown-label">分</div>
+          </div>
+          <div class="countdown-separator">:</div>
+          <div class="countdown-item">
+            <div class="countdown-number" id="seconds">00</div>
+            <div class="countdown-label">秒</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="signature"> 永远爱你 </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# VS Code / 编辑器
+.vscode/
+.cursor/
+
+# Python
+__pycache__/
+*.pyc
+
+# Cache / Temp
+.cache/
+*.log
+
+# Data (如果有大文件)
+data/
+*.npz
+*.npy
+
+# OS
+Thumbs.db
+
