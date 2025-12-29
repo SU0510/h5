@@ -83,6 +83,8 @@ var swiper = new Swiper(".mySwiper", {
   fadeEffect: {
     crossFade: true
   },
+  // 微信适配：允许特定页面的内部滚动不触发翻页
+  passiveListeners: true,
   on: {
     slideChange: function() {
       const currentSlide = this.slides[this.activeIndex];
@@ -519,10 +521,13 @@ const timelineSlide = document.querySelector('.timeline');
 if (timelineSlide) {
   // 触摸位置记录，用于判断滑动方向
   let touchStartY = 0;
+  let isTimelineScrolling = false;
   
   // 防止时间线滚动时触发 Swiper 页面切换（触摸事件）
   timelineSlide.addEventListener('touchstart', (e) => {
     touchStartY = e.touches[0].clientY;
+    // 初始化时假设还有滚动空间
+    isTimelineScrolling = true;
   }, { passive: true });
   
   timelineSlide.addEventListener('touchmove', (e) => {
@@ -532,13 +537,12 @@ if (timelineSlide) {
     const isMovingDown = touchCurrentY < touchStartY; // 向下滑（Y减小）
     const isMovingUp = touchCurrentY > touchStartY;   // 向上滑（Y增大）
     
-    // 如果在内容区域内滚动（不在顶部/底部），阻止冒泡让内部滚动优先
-    if ((isMovingDown && !isAtTop) || (isMovingUp && !isAtBottom)) {
-      // 不停止传播，让正常滚动继续
-    } else if ((isMovingDown && isAtBottom) || (isMovingUp && isAtTop)) {
-      // 到达顶部/底部时，停止传播，让 Swiper 接管翻页
+    // 只在明确到达边界且继续滑动同方向时，才阻止传播
+    // 这样可以避免微信的"返回上一页"手势误判
+    if ((isMovingDown && isAtBottom) || (isMovingUp && isAtTop)) {
       e.stopPropagation();
     }
+    // 在内容区域正常滚动时，允许事件冒泡被Swiper的mousewheel处理
   }, { passive: true });
   
   // 鼠标滚轮事件（桌面浏览器）
