@@ -83,8 +83,6 @@ var swiper = new Swiper(".mySwiper", {
   fadeEffect: {
     crossFade: true
   },
-  // 微信适配：允许特定页面的内部滚动不触发翻页
-  passiveListeners: true,
   on: {
     slideChange: function() {
       const currentSlide = this.slides[this.activeIndex];
@@ -519,39 +517,42 @@ function startCountdown() {
 // 时间线页面现已改为普通页面，支持内部滚动
 const timelineSlide = document.querySelector('.timeline');
 if (timelineSlide) {
-  // 触摸位置记录，用于判断滑动方向
+  // 触摸位置记录，用于判断滑动方向和距离
   let touchStartY = 0;
-  let isTimelineScrolling = false;
+  let touchStartTime = 0;
   
   // 防止时间线滚动时触发 Swiper 页面切换（触摸事件）
   timelineSlide.addEventListener('touchstart', (e) => {
     touchStartY = e.touches[0].clientY;
-    // 初始化时假设还有滚动空间
-    isTimelineScrolling = true;
+    touchStartTime = Date.now();
   }, { passive: true });
   
   timelineSlide.addEventListener('touchmove', (e) => {
-    const isAtTop = timelineSlide.scrollTop <= 0;
-    const isAtBottom = timelineSlide.scrollTop + timelineSlide.clientHeight >= timelineSlide.scrollHeight - 1;
+    const isAtTop = timelineSlide.scrollTop === 0;
+    const isAtBottom = Math.abs(timelineSlide.scrollTop + timelineSlide.clientHeight - timelineSlide.scrollHeight) < 5;
     const touchCurrentY = e.touches[0].clientY;
-    const isMovingDown = touchCurrentY < touchStartY; // 向下滑（Y减小）
-    const isMovingUp = touchCurrentY > touchStartY;   // 向上滑（Y增大）
+    const deltaY = touchStartY - touchCurrentY; // 正数表示向下滑
     
-    // 只在明确到达边界且继续滑动同方向时，才阻止传播
-    // 这样可以避免微信的"返回上一页"手势误判
-    if ((isMovingDown && isAtBottom) || (isMovingUp && isAtTop)) {
+    // 微信兼容：只在明确到达边界 且 用户正在尝试超过边界时才阻止冒泡
+    if ((deltaY > 5 && isAtBottom) || (deltaY < -5 && isAtTop)) {
+      // 明确的向下滑 且 已在底部 => 让Swiper翻页
+      // 明确的向上滑 且 已在顶部 => 让Swiper翻页
       e.stopPropagation();
     }
-    // 在内容区域正常滚动时，允许事件冒泡被Swiper的mousewheel处理
+    // 否则允许事件冒泡进行内部滚动
   }, { passive: true });
   
   // 鼠标滚轮事件（桌面浏览器）
   timelineSlide.addEventListener('wheel', (e) => {
-    const isAtTop = timelineSlide.scrollTop <= 0;
-    const isAtBottom = timelineSlide.scrollTop + timelineSlide.clientHeight >= timelineSlide.scrollHeight - 1;
+    const isAtTop = timelineSlide.scrollTop === 0;
+    const isAtBottom = Math.abs(timelineSlide.scrollTop + timelineSlide.clientHeight - timelineSlide.scrollHeight) < 5;
     
-    if ((!isAtTop && e.deltaY > 0) || (!isAtBottom && e.deltaY < 0)) {
+    if ((e.deltaY > 0 && !isAtBottom) || (e.deltaY < 0 && !isAtTop)) {
+      // 在内容区域内滚动，允许
       e.stopPropagation();
+    } else if ((e.deltaY > 0 && isAtBottom) || (e.deltaY < 0 && isAtTop)) {
+      // 在边界处继续滚动，让Swiper接管
+      // 不阻止，让Swiper处理
     }
   }, { passive: true });
 }
