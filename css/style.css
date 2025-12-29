@@ -1112,7 +1112,7 @@ body, html {
 .message-container {
   max-width: 600px;
   width: 100%;
-  margin: 0 auto;
+  margin: 0 auto !important;
   opacity: 0;
   transform: translateY(0);
   transition: all 1s ease-out;
@@ -1121,6 +1121,7 @@ body, html {
   align-items: center;
   justify-content: center;
   flex: 1;
+  box-sizing: border-box;
 }
 
 .swiper-slide-active .message-container {
@@ -1149,6 +1150,7 @@ body, html {
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.3),
     0 0 20px rgba(255, 182, 193, 0.1);
+  margin: 0 auto;
 }
 
 .message-text {
@@ -1342,19 +1344,21 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
+  gap: clamp(6px, 2vw, 15px);
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .countdown-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 70px;
+  min-width: unset;
+  flex-shrink: 1;
 }
 
 .countdown-number {
-  font-size: 48px;
+  font-size: clamp(24px, 7vw, 48px);
   font-weight: 700;
   color: rgba(255, 182, 193, 1);
   text-shadow: 
@@ -1365,12 +1369,12 @@ body, html {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border-radius: 15px;
-  padding: 15px 20px;
+  padding: clamp(8px, 2.5vw, 15px) clamp(10px, 3vw, 20px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.3),
     0 0 20px rgba(255, 182, 193, 0.2);
-  min-width: 80px;
+  min-width: auto;
   text-align: center;
 }
 
@@ -1382,7 +1386,7 @@ body, html {
 }
 
 .countdown-separator {
-  font-size: 36px;
+  font-size: clamp(20px, 6vw, 36px);
   color: rgba(255, 182, 193, 0.6);
   text-shadow: 0 0 15px rgba(255, 182, 193, 0.5);
   margin-bottom: 20px;

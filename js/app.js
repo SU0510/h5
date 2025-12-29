@@ -77,6 +77,7 @@ var swiper = new Swiper(".mySwiper", {
     sensitivity: 1,
     releaseOnEdges: true
   },
+  touchEventsTarget: 'container',  // 让触摸事件优先在容器处理
   speed: 800,
   effect: "slide",
   fadeEffect: {
@@ -516,9 +517,32 @@ function startCountdown() {
 // 时间线页面现已改为普通页面，支持内部滚动
 const timelineSlide = document.querySelector('.timeline');
 if (timelineSlide) {
-  // 防止时间线滚动时触发 Swiper 页面切换
+  // 触摸位置记录，用于判断滑动方向
+  let touchStartY = 0;
+  
+  // 防止时间线滚动时触发 Swiper 页面切换（触摸事件）
+  timelineSlide.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  
+  timelineSlide.addEventListener('touchmove', (e) => {
+    const isAtTop = timelineSlide.scrollTop <= 0;
+    const isAtBottom = timelineSlide.scrollTop + timelineSlide.clientHeight >= timelineSlide.scrollHeight - 1;
+    const touchCurrentY = e.touches[0].clientY;
+    const isMovingDown = touchCurrentY < touchStartY; // 向下滑（Y减小）
+    const isMovingUp = touchCurrentY > touchStartY;   // 向上滑（Y增大）
+    
+    // 如果在内容区域内滚动（不在顶部/底部），阻止冒泡让内部滚动优先
+    if ((isMovingDown && !isAtTop) || (isMovingUp && !isAtBottom)) {
+      // 不停止传播，让正常滚动继续
+    } else if ((isMovingDown && isAtBottom) || (isMovingUp && isAtTop)) {
+      // 到达顶部/底部时，停止传播，让 Swiper 接管翻页
+      e.stopPropagation();
+    }
+  }, { passive: true });
+  
+  // 鼠标滚轮事件（桌面浏览器）
   timelineSlide.addEventListener('wheel', (e) => {
-    // 只有在不在顶部或底部时，才阻止事件传播
     const isAtTop = timelineSlide.scrollTop <= 0;
     const isAtBottom = timelineSlide.scrollTop + timelineSlide.clientHeight >= timelineSlide.scrollHeight - 1;
     
