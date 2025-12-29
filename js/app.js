@@ -511,60 +511,19 @@ function startCountdown() {
 
 
 /* ===========================
-   📅 时间线页面 - 滑动逻辑优化
+   📅 时间线页面 - 普通页面配置
 =========================== */
+// 时间线页面现已改为普通页面，支持内部滚动
 const timelineSlide = document.querySelector('.timeline');
 if (timelineSlide) {
-  let touchStartY = 0;
-  let isAtTop = false;
-  let isAtBottom = false;
-  let touchStartTime = 0;
-
-  timelineSlide.addEventListener('touchstart', (e) => {
-    touchStartY = e.touches[0].clientY;
-    touchStartTime = Date.now();
-    // 记录触摸开始时的滚动位置状态
-    isAtTop = timelineSlide.scrollTop <= 0;
-    // 使用 1px 的误差范围
-    isAtBottom = timelineSlide.scrollTop + timelineSlide.clientHeight >= timelineSlide.scrollHeight - 1;
+  // 防止时间线滚动时触发 Swiper 页面切换
+  timelineSlide.addEventListener('wheel', (e) => {
+    // 只有在不在顶部或底部时，才阻止事件传播
+    const isAtTop = timelineSlide.scrollTop <= 0;
+    const isAtBottom = timelineSlide.scrollTop + timelineSlide.clientHeight >= timelineSlide.scrollHeight - 1;
+    
+    if ((!isAtTop && e.deltaY > 0) || (!isAtBottom && e.deltaY < 0)) {
+      e.stopPropagation();
+    }
   }, { passive: true });
-
-  timelineSlide.addEventListener('touchmove', (e) => {
-    const touchCurrentY = e.touches[0].clientY;
-    const dy = touchCurrentY - touchStartY;
-    
-    // 在顶部向上滑动时，阻止默认行为（防止浏览器返回手势）
-    if (isAtTop && dy < -50) {
-      e.preventDefault?.();
-    }
-    
-    // 在底部向下滑动时，阻止默认行为
-    if (isAtBottom && dy > 50) {
-      e.preventDefault?.();
-    }
-  });
-
-  timelineSlide.addEventListener('touchend', (e) => {
-    const touchEndY = e.changedTouches[0].clientY;
-    const dy = touchEndY - touchStartY;
-    const touchDuration = Date.now() - touchStartTime;
-    const threshold = 50; // 滑动阈值
-    const isQuickSwipe = touchDuration < 500; // 快速滑动判定
-
-    // 如果开始时在顶部，且向上滑动超过阈值 -> 上一页
-    // 向上滑动 dy 为负数
-    if (isAtTop && dy < -threshold) {
-      swiper.slidePrev();
-    }
-
-    // 如果开始时在底部，且向下滑动超过阈值 -> 下一页
-    if (isAtBottom && dy > threshold) {
-      swiper.slideNext();
-    }
-  });
-  
-  // 阻止 touchmove 事件冒泡，防止 Swiper 意外接管
-  timelineSlide.addEventListener('touchmove', (e) => {
-    e.stopPropagation();
-  }, { passive: false });
 }

@@ -926,21 +926,22 @@ body, html {
 
 /* 📅 时间线页面 */
 .timeline {
-  padding: 10px 20px;
+  padding: 40px 20px 60px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100%; /* 强制高度为100%，而不是min-height */
+  justify-content: flex-start;
+  height: 100%;
   box-sizing: border-box;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   /* 隐藏滚动条 */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .timeline::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
 }
 
 .timeline-title {
@@ -968,15 +969,15 @@ body, html {
 .timeline-container {
   max-width: 420px;
   width: 100%;
-  margin: 0 auto;
+  margin: 0 auto 40px auto;
   position: relative;
   padding-left: 30px;
   padding-right: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  flex: 1;
+  justify-content: flex-start;
+  flex: 0 0 auto;
 }
 
 .timeline-container::before {
@@ -996,12 +997,17 @@ body, html {
 
 .timeline-item {
   position: relative;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   opacity: 0;
   transform: translateX(-30px);
   transition: all 0.6s ease-out;
   width: 100%;
-  min-height: 100px;
+  min-height: auto;
+  flex-shrink: 0;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
 }
 
 .swiper-slide-active .timeline-item:nth-child(1) {
@@ -1461,7 +1467,7 @@ body, html {
   }
   
   .timeline-item {
-    margin-bottom: 30px;
+    margin-bottom: 25px;
   }
   
   .message-text {
@@ -1632,7 +1638,7 @@ body, html {
   }
   
   .timeline {
-    padding: 30px 15px;
+    padding: 30px 15px 60px 15px;
   }
   
   .timeline-container {
@@ -1641,23 +1647,23 @@ body, html {
   }
   
   .timeline-item {
-    margin-bottom: 25px;
+    margin-bottom: 18px;
   }
   
   .timeline-content {
-    padding: 15px;
+    padding: 12px 15px;
   }
   
   .timeline-content h3 {
-    font-size: 18px;
+    font-size: 16px;
   }
   
   .timeline-content p {
-    font-size: 14px;
+    font-size: 13px;
   }
   
   .timeline-date {
-    font-size: 12px;
+    font-size: 11px;
   }
   
   .message {
@@ -1678,7 +1684,7 @@ body, html {
   }
   
   .map-container {
-    height: 350px;
+    height: 320px;
     max-width: 100%;
   }
   
