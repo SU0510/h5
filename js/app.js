@@ -405,6 +405,9 @@ function animateNumber(element, target, duration = 1000) {
 }
 
 // 当统计页面激活时，计算并显示天数
+/* 地图动画定时器 ID 存储 */
+let mapAnimationTimeouts = [];
+
 swiper.on("slideChange", function() {
   const activeSlide = this.slides[this.activeIndex];
   if (activeSlide && activeSlide.classList.contains("stats")) {
@@ -417,18 +420,28 @@ swiper.on("slideChange", function() {
   
   // 地图页面动画
   if (activeSlide && activeSlide.classList.contains("map")) {
+    // 清除之前的所有定时器
+    mapAnimationTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+    mapAnimationTimeouts = [];
+    
     const markers = activeSlide.querySelectorAll(".location-marker");
     markers.forEach((marker, index) => {
       // 立即移除active类，准备重新动画
       marker.classList.remove("active");
       
       // 延迟后重新添加active类，从头开始动画显示
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         marker.classList.add("active");
       }, index * 1000 + 500); // 每个标记延迟1秒显示，初始延迟500ms
+      
+      // 保存 timeout ID 供后续清除
+      mapAnimationTimeouts.push(timeoutId);
     });
   } else {
-    // 离开地图页面时，移除所有标记的active类
+    // 离开地图页面时，清除所有定时器并移除active类
+    mapAnimationTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+    mapAnimationTimeouts = [];
+    
     document.querySelectorAll(".location-marker").forEach(marker => {
       marker.classList.remove("active");
     });
@@ -505,34 +518,53 @@ if (timelineSlide) {
   let touchStartY = 0;
   let isAtTop = false;
   let isAtBottom = false;
+  let touchStartTime = 0;
 
   timelineSlide.addEventListener('touchstart', (e) => {
     touchStartY = e.touches[0].clientY;
+    touchStartTime = Date.now();
     // 记录触摸开始时的滚动位置状态
     isAtTop = timelineSlide.scrollTop <= 0;
     // 使用 1px 的误差范围
     isAtBottom = timelineSlide.scrollTop + timelineSlide.clientHeight >= timelineSlide.scrollHeight - 1;
   }, { passive: true });
 
+  timelineSlide.addEventListener('touchmove', (e) => {
+    const touchCurrentY = e.touches[0].clientY;
+    const dy = touchCurrentY - touchStartY;
+    
+    // 在顶部向上滑动时，阻止默认行为（防止浏览器返回手势）
+    if (isAtTop && dy < -50) {
+      e.preventDefault?.();
+    }
+    
+    // 在底部向下滑动时，阻止默认行为
+    if (isAtBottom && dy > 50) {
+      e.preventDefault?.();
+    }
+  });
+
   timelineSlide.addEventListener('touchend', (e) => {
     const touchEndY = e.changedTouches[0].clientY;
     const dy = touchEndY - touchStartY;
+    const touchDuration = Date.now() - touchStartTime;
     const threshold = 50; // 滑动阈值
+    const isQuickSwipe = touchDuration < 500; // 快速滑动判定
 
-    // 如果开始时在顶部，且向下滑动超过阈值 -> 上一页
-    // 注意：Swiper 是反直觉的，向下滑动是 prev，向上滑动是 next
-    if (isAtTop && dy > threshold) {
+    // 如果开始时在顶部，且向上滑动超过阈值 -> 上一页
+    // 向上滑动 dy 为负数
+    if (isAtTop && dy < -threshold) {
       swiper.slidePrev();
     }
 
-    // 如果开始时在底部，且向上滑动超过阈值 -> 下一页
-    if (isAtBottom && dy < -threshold) {
+    // 如果开始时在底部，且向下滑动超过阈值 -> 下一页
+    if (isAtBottom && dy > threshold) {
       swiper.slideNext();
     }
   });
   
-  // 阻止 touchmove 事件冒泡，防止 Swiper 意外接管（虽然有 swiper-no-swiping，但双重保险）
+  // 阻止 touchmove 事件冒泡，防止 Swiper 意外接管
   timelineSlide.addEventListener('touchmove', (e) => {
     e.stopPropagation();
-  }, { passive: true });
+  }, { passive: false });
 }
