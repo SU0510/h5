@@ -644,6 +644,24 @@ body, html {
   z-index: 10;
 }
 
+/* 版本号 */
+.version-badge {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  font-family: "Courier New", monospace;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+}
+
 /* 移动端优化装饰图片位置 */
 @media (max-width: 768px) {
   .cover-decoration-right {
@@ -1577,6 +1595,13 @@ body, html {
     font-size: 14px;
   }
   
+  .version-badge {
+    top: 12px;
+    right: 12px;
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+  
   .photo {
     width: 95%;
   }
@@ -1791,6 +1816,13 @@ body, html {
   .title {
     font-size: 20px;
     margin-top: 0; /* 移除 margin-top */
+  }
+  
+  .version-badge {
+    top: 10px;
+    right: 10px;
+    font-size: 10px;
+    padding: 2px 5px;
   }
   
   .stats-grid {
